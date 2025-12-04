@@ -1284,3 +1284,171 @@ a {
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
+
+/* ========================================
+   Custom Cursor
+   ======================================== */
+.custom-cursor {
+    width: 12px;
+    height: 12px;
+    background: var(--color-secondary);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease;
+    mix-blend-mode: difference;
+}
+
+.cursor-follower {
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(245, 158, 11, 0.5);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+}
+
+.custom-cursor.hover {
+    width: 20px;
+    height: 20px;
+    background: rgba(245, 158, 11, 0.8);
+}
+
+.cursor-follower.hover {
+    width: 60px;
+    height: 60px;
+    border-color: var(--color-secondary);
+}
+
+/* Hide custom cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+
+    .custom-cursor,
+    .cursor-follower {
+        display: none;
+    }
+}
+
+/* ========================================
+   Background Particles
+   ======================================== */
+.particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(59, 130, 246, 0.3);
+    border-radius: 50%;
+    animation: floatParticle linear infinite;
+}
+
+.particle:nth-child(even) {
+    background: rgba(245, 158, 11, 0.2);
+}
+
+@keyframes floatParticle {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-100px) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* ========================================
+   Enhanced Image Hover Effects
+   ======================================== */
+.carousel-slide .phone-mockup {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
+}
+
+.carousel-slide:hover .phone-mockup {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow:
+        0 60px 120px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.15),
+        0 0 60px rgba(59, 130, 246, 0.2);
+}
+
+.feature-image .phone-mockup {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feature-card:hover .feature-image .phone-mockup {
+    transform: rotate(-3deg) scale(1.05);
+}
+
+/* Shine effect on hover */
+.cta-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg,
+            transparent 30%,
+            rgba(255, 255, 255, 0.3) 50%,
+            transparent 70%);
+    transform: translateX(-100%) rotate(45deg);
+    transition: transform 0.6s ease;
+}
+
+.cta-button:hover::after {
+    transform: translateX(100%) rotate(45deg);
+}
+
+/* Glow effect on stat items */
+.stat-item {
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.2),
+        0 0 30px rgba(59, 130, 246, 0.2);
+}
+
+/* Interactive FAQ items */
+.faq-item {
+    transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+    transform: translateX(5px);
+    box-shadow:
+        -4px 0 0 var(--color-primary),
+        0 4px 12px rgba(0, 0, 0, 0.1);
+}

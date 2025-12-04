@@ -14,7 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initParallax();
     initScrollProgress();
     initTypingAnimation();
+    initCustomCursor();
+    initParticles();
 });
+
 
 
 
@@ -441,4 +444,108 @@ function initTypingAnimation() {
     setTimeout(() => {
         type();
     }, 1200);
+}
+
+// ========================================
+// Custom Cursor
+// ========================================
+function initCustomCursor() {
+    const cursor = document.getElementById('customCursor');
+    const follower = document.getElementById('cursorFollower');
+
+    if (!cursor || !follower) return;
+
+    // Check if it's a touch device
+    if ('ontouchstart' in window) return;
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let followerX = 0;
+    let followerY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        cursor.style.left = mouseX + 'px';
+        cursor.style.top = mouseY + 'px';
+    });
+
+    // Smooth follower animation
+    function animateFollower() {
+        followerX += (mouseX - followerX) * 0.15;
+        followerY += (mouseY - followerY) * 0.15;
+
+        follower.style.left = followerX + 'px';
+        follower.style.top = followerY + 'px';
+
+        requestAnimationFrame(animateFollower);
+    }
+    animateFollower();
+
+    // Hover effect on interactive elements
+    const interactiveElements = document.querySelectorAll('a, button, .cta-button, .faq-question, .carousel-btn');
+
+    interactiveElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursor.classList.add('hover');
+            follower.classList.add('hover');
+        });
+
+        el.addEventListener('mouseleave', () => {
+            cursor.classList.remove('hover');
+            follower.classList.remove('hover');
+        });
+    });
+
+    // Hide cursor when leaving window
+    document.addEventListener('mouseleave', () => {
+        cursor.style.opacity = '0';
+        follower.style.opacity = '0';
+    });
+
+    document.addEventListener('mouseenter', () => {
+        cursor.style.opacity = '1';
+        follower.style.opacity = '1';
+    });
+}
+
+// ========================================
+// Background Particles
+// ========================================
+function initParticles() {
+    const container = document.getElementById('particles');
+
+    if (!container) return;
+
+    const particleCount = 20;
+
+    for (let i = 0; i < particleCount; i++) {
+        createParticle(container);
+    }
+}
+
+function createParticle(container) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+
+    // Random properties
+    const size = Math.random() * 4 + 2;
+    const left = Math.random() * 100;
+    const duration = Math.random() * 20 + 15;
+    const delay = Math.random() * 20;
+
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    particle.style.left = left + '%';
+    particle.style.animationDuration = duration + 's';
+    particle.style.animationDelay = delay + 's';
+
+    container.appendChild(particle);
+
+    // Recreate particle after animation
+    particle.addEventListener('animationend', () => {
+        particle.remove();
+        createParticle(container);
+    });
 }
