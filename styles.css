@@ -10,23 +10,23 @@
     --color-primary-dark: #1E3A8A;
     --color-secondary: #F59E0B;
     --color-secondary-light: #FCD34D;
-    
+
     --color-bg-light: #F8FAFC;
     --color-bg-dark: #0F172A;
     --color-bg-card: #FFFFFF;
-    
+
     --color-text-primary: #1E293B;
     --color-text-secondary: #64748B;
     --color-text-light: #F8FAFC;
-    
+
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
     --gradient-hero: linear-gradient(180deg, #0F172A 0%, #1E3A8A 50%, #1E40AF 100%);
     --gradient-gold: linear-gradient(135deg, #F59E0B 0%, #FCD34D 100%);
-    
+
     /* Typography */
     --font-primary: 'Inter', 'Noto Sans JP', sans-serif;
-    
+
     /* Spacing */
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
@@ -34,21 +34,21 @@
     --spacing-lg: 2rem;
     --spacing-xl: 3rem;
     --spacing-2xl: 5rem;
-    
+
     /* Border Radius */
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 20px;
     --radius-xl: 32px;
     --radius-full: 9999px;
-    
+
     /* Shadows */
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     --shadow-glow: 0 0 40px rgba(59, 130, 246, 0.3);
-    
+
     /* Transitions */
     --transition-fast: 150ms ease;
     --transition-base: 300ms ease;
@@ -58,7 +58,9 @@
 /* ========================================
    Reset & Base
    ======================================== */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -125,7 +127,7 @@ a {
 .hero-pattern {
     position: absolute;
     inset: 0;
-    background-image: 
+    background-image:
         radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.1) 0%, transparent 40%),
         radial-gradient(circle at 40% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 40%);
@@ -206,7 +208,7 @@ a {
     padding: 12px;
     background: linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%);
     border-radius: 40px;
-    box-shadow: 
+    box-shadow:
         0 50px 100px rgba(0, 0, 0, 0.5),
         0 0 0 1px rgba(255, 255, 255, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -309,8 +311,17 @@ a {
 }
 
 @keyframes scroll {
-    0%, 100% { opacity: 1; transform: translateX(-50%) translateY(0); }
-    50% { opacity: 0.5; transform: translateX(-50%) translateY(10px); }
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: translateX(-50%) translateY(10px);
+    }
 }
 
 /* ========================================
@@ -419,11 +430,11 @@ a {
         grid-template-columns: 1fr 1fr;
         align-items: center;
     }
-    
+
     .feature-card.reverse .feature-content {
         order: 2;
     }
-    
+
     .feature-card.reverse .feature-image {
         order: 1;
     }
@@ -670,9 +681,17 @@ a {
 }
 
 /* Stagger animation for grid items */
-.problems-grid .fade-in:nth-child(1) { transition-delay: 0.1s; }
-.problems-grid .fade-in:nth-child(2) { transition-delay: 0.2s; }
-.problems-grid .fade-in:nth-child(3) { transition-delay: 0.3s; }
+.problems-grid .fade-in:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.problems-grid .fade-in:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.problems-grid .fade-in:nth-child(3) {
+    transition-delay: 0.3s;
+}
 
 /* ========================================
    Responsive Adjustments
@@ -681,12 +700,242 @@ a {
     .hero {
         padding-top: 80px;
     }
-    
+
     .phone-mockup {
         width: 240px;
     }
-    
+
     .phone-mockup.small {
         width: 200px;
     }
+}
+
+/* ========================================
+   Fixed Header
+   ======================================== */
+.fixed-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-sm) 0;
+    transform: translateY(-100%);
+    transition: transform var(--transition-base);
+}
+
+.fixed-header.visible {
+    transform: translateY(0);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-light);
+}
+
+.header-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--color-bg-card);
+    color: var(--color-text-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    transition: all var(--transition-base);
+}
+
+.header-cta:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-glow);
+}
+
+.apple-icon-small {
+    width: 16px;
+    height: 16px;
+}
+
+/* ========================================
+   Recommended Section
+   ======================================== */
+.recommended {
+    padding: var(--spacing-2xl) 0;
+    background: linear-gradient(180deg, var(--color-bg-light) 0%, #EEF2FF 100%);
+}
+
+.recommended-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+}
+
+@media (min-width: 640px) {
+    .recommended-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .recommended-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.recommended-card {
+    background: var(--color-bg-card);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(30, 64, 175, 0.1);
+    transition: all var(--transition-base);
+}
+
+.recommended-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--color-primary-light);
+}
+
+.recommended-icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.recommended-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.recommended-desc {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+/* Stagger animation for recommended cards */
+.recommended-grid .fade-in:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.recommended-grid .fade-in:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.recommended-grid .fade-in:nth-child(3) {
+    transition-delay: 0.3s;
+}
+
+.recommended-grid .fade-in:nth-child(4) {
+    transition-delay: 0.4s;
+}
+
+/* ========================================
+   FAQ Section
+   ======================================== */
+.faq {
+    padding: var(--spacing-2xl) 0;
+    background: var(--color-bg-light);
+}
+
+.faq-list {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-sm);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.faq-question {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    font-family: var(--font-primary);
+    transition: background var(--transition-fast);
+}
+
+.faq-question:hover {
+    background: rgba(30, 64, 175, 0.03);
+}
+
+.faq-question span {
+    flex: 1;
+    padding-right: var(--spacing-sm);
+}
+
+.faq-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--color-primary);
+    transition: transform var(--transition-base);
+    flex-shrink: 0;
+}
+
+.faq-item.open .faq-icon {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-base), padding var(--transition-base);
+}
+
+.faq-item.open .faq-answer {
+    max-height: 300px;
+}
+
+.faq-answer p {
+    padding: 0 var(--spacing-lg) var(--spacing-md);
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+}
+
+/* Stagger animation for FAQ items */
+.faq-list .fade-in:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.faq-list .fade-in:nth-child(2) {
+    transition-delay: 0.15s;
+}
+
+.faq-list .fade-in:nth-child(3) {
+    transition-delay: 0.2s;
+}
+
+.faq-list .fade-in:nth-child(4) {
+    transition-delay: 0.25s;
+}
+
+.faq-list .fade-in:nth-child(5) {
+    transition-delay: 0.3s;
 }

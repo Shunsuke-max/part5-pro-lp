@@ -5,20 +5,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     initScrollAnimations();
     initCarousel();
+    initFixedHeader();
+    initFAQ();
 });
+
 
 // ========================================
 // Scroll Animations
 // ========================================
 function initScrollAnimations() {
     const fadeElements = document.querySelectorAll('.fade-in');
-    
+
     const observerOptions = {
         root: null,
         rootMargin: '0px',
         threshold: 0.1
     };
-    
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -27,7 +30,7 @@ function initScrollAnimations() {
             }
         });
     }, observerOptions);
-    
+
     fadeElements.forEach(el => observer.observe(el));
 }
 
@@ -40,13 +43,13 @@ function initCarousel() {
     const prevBtn = document.querySelector('.carousel-btn.prev');
     const nextBtn = document.querySelector('.carousel-btn.next');
     const dotsContainer = document.querySelector('.carousel-dots');
-    
+
     if (!track || slides.length === 0) return;
-    
+
     let currentIndex = 0;
     let slideWidth = 0;
     let visibleSlides = 1;
-    
+
     // Create dots
     slides.forEach((_, index) => {
         const dot = document.createElement('button');
@@ -56,14 +59,14 @@ function initCarousel() {
         dot.addEventListener('click', () => goToSlide(index));
         dotsContainer.appendChild(dot);
     });
-    
+
     const dots = document.querySelectorAll('.carousel-dot');
-    
+
     function calculateDimensions() {
         const containerWidth = track.parentElement.offsetWidth;
         const slideElement = slides[0];
         slideWidth = slideElement.offsetWidth + parseInt(getComputedStyle(track).gap);
-        
+
         // Determine visible slides based on viewport
         if (window.innerWidth >= 1024) {
             visibleSlides = 3;
@@ -73,30 +76,30 @@ function initCarousel() {
             visibleSlides = 1;
         }
     }
-    
+
     function updateCarousel() {
         const maxIndex = Math.max(0, slides.length - visibleSlides);
         currentIndex = Math.min(currentIndex, maxIndex);
-        
+
         const offset = -currentIndex * slideWidth;
         track.style.transform = `translateX(${offset}px)`;
-        
+
         // Update dots
         dots.forEach((dot, index) => {
             dot.classList.toggle('active', index === currentIndex);
         });
-        
+
         // Update button states
         prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1';
         nextBtn.style.opacity = currentIndex >= maxIndex ? '0.5' : '1';
     }
-    
+
     function goToSlide(index) {
         const maxIndex = Math.max(0, slides.length - visibleSlides);
         currentIndex = Math.max(0, Math.min(index, maxIndex));
         updateCarousel();
     }
-    
+
     function nextSlide() {
         const maxIndex = Math.max(0, slides.length - visibleSlides);
         if (currentIndex < maxIndex) {
@@ -104,35 +107,35 @@ function initCarousel() {
             updateCarousel();
         }
     }
-    
+
     function prevSlide() {
         if (currentIndex > 0) {
             currentIndex--;
             updateCarousel();
         }
     }
-    
+
     // Event listeners
     prevBtn.addEventListener('click', prevSlide);
     nextBtn.addEventListener('click', nextSlide);
-    
+
     // Touch/Swipe support
     let touchStartX = 0;
     let touchEndX = 0;
-    
+
     track.addEventListener('touchstart', (e) => {
         touchStartX = e.changedTouches[0].screenX;
     }, { passive: true });
-    
+
     track.addEventListener('touchend', (e) => {
         touchEndX = e.changedTouches[0].screenX;
         handleSwipe();
     }, { passive: true });
-    
+
     function handleSwipe() {
         const swipeThreshold = 50;
         const diff = touchStartX - touchEndX;
-        
+
         if (Math.abs(diff) > swipeThreshold) {
             if (diff > 0) {
                 nextSlide();
@@ -141,11 +144,11 @@ function initCarousel() {
             }
         }
     }
-    
+
     // Initialize and handle resize
     calculateDimensions();
     updateCarousel();
-    
+
     let resizeTimeout;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimeout);
@@ -160,7 +163,7 @@ function initCarousel() {
 // Smooth Scroll for Navigation Links
 // ========================================
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
+    anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
@@ -171,3 +174,65 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 });
+
+// ========================================
+// Fixed Header
+// ========================================
+function initFixedHeader() {
+    const header = document.getElementById('fixedHeader');
+    const hero = document.querySelector('.hero');
+
+    if (!header || !hero) return;
+
+    const heroHeight = hero.offsetHeight;
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    function updateHeader() {
+        const currentScrollY = window.scrollY;
+
+        // Show header after scrolling past hero section
+        if (currentScrollY > heroHeight * 0.5) {
+            header.classList.add('visible');
+        } else {
+            header.classList.remove('visible');
+        }
+
+        lastScrollY = currentScrollY;
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(updateHeader);
+            ticking = true;
+        }
+    }, { passive: true });
+}
+
+// ========================================
+// FAQ Accordion
+// ========================================
+function initFAQ() {
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+
+        question.addEventListener('click', () => {
+            const isOpen = item.classList.contains('open');
+
+            // Close all other items
+            faqItems.forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.classList.remove('open');
+                    otherItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // Toggle current item
+            item.classList.toggle('open');
+            question.setAttribute('aria-expanded', !isOpen);
+        });
+    });
+}
