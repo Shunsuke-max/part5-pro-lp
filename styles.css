@@ -1164,3 +1164,123 @@ a {
 .stat-number {
     font-variant-numeric: tabular-nums;
 }
+
+/* ========================================
+   Loading Screen
+   ======================================== */
+.loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--gradient-hero);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.loading-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loading-content {
+    text-align: center;
+}
+
+.loading-logo {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-lg);
+    animation: loadingPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.7;
+        transform: scale(0.98);
+    }
+}
+
+.loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-top-color: var(--color-secondary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ========================================
+   Scroll Progress Bar
+   ======================================== */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--gradient-gold);
+    z-index: 1001;
+    width: 0%;
+    transition: width 0.1s ease-out;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+/* ========================================
+   Typing Animation
+   ======================================== */
+.hero-title {
+    min-height: 1.2em;
+}
+
+.typing-text {
+    display: inline;
+}
+
+.typing-cursor {
+    display: inline-block;
+    color: var(--color-secondary);
+    font-weight: 300;
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+}
+
+@keyframes blink {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
+    }
+}
+
+.typing-cursor.hidden {
+    display: none;
+}
+
+/* Gradient text for typing */
+.typing-text .gradient-char {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}

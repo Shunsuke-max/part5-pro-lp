@@ -2,6 +2,9 @@
 // Part5 Pro Landing Page - JavaScript
 // ========================================
 
+// Initialize loading screen first
+initLoadingScreen();
+
 document.addEventListener('DOMContentLoaded', () => {
     initScrollAnimations();
     initCarousel();
@@ -9,7 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initFAQ();
     initCountUp();
     initParallax();
+    initScrollProgress();
+    initTypingAnimation();
 });
+
 
 
 // ========================================
@@ -323,4 +329,116 @@ function initParallax() {
             ticking = true;
         }
     }, { passive: true });
+}
+
+// ========================================
+// Loading Screen
+// ========================================
+function initLoadingScreen() {
+    window.addEventListener('load', () => {
+        const loadingScreen = document.getElementById('loadingScreen');
+        if (loadingScreen) {
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+            }, 800);
+        }
+    });
+}
+
+// ========================================
+// Scroll Progress Bar
+// ========================================
+function initScrollProgress() {
+    const progressBar = document.getElementById('scrollProgress');
+
+    if (!progressBar) return;
+
+    function updateProgress() {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrolled = window.scrollY;
+        const progress = (scrolled / documentHeight) * 100;
+
+        progressBar.style.width = `${Math.min(progress, 100)}%`;
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+}
+
+// ========================================
+// Typing Animation
+// ========================================
+function initTypingAnimation() {
+    const typingElement = document.getElementById('typingText');
+    const cursor = document.querySelector('.typing-cursor');
+
+    if (!typingElement) return;
+
+    const lines = [
+        { text: 'Part 5を、', isGradient: false },
+        { text: '極める。', isGradient: true }
+    ];
+
+    let lineIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let isPaused = false;
+
+    const typingSpeed = 100;
+    const deletingSpeed = 50;
+    const pauseTime = 2000;
+    const lineBreakPause = 300;
+
+    function type() {
+        const currentLine = lines[lineIndex];
+
+        if (!isDeleting) {
+            // Typing
+            if (charIndex <= currentLine.text.length) {
+                let displayText = '';
+
+                // Build text from all completed lines + current progress
+                for (let i = 0; i < lineIndex; i++) {
+                    if (lines[i].isGradient) {
+                        displayText += `<span class="gradient-char">${lines[i].text}</span>`;
+                    } else {
+                        displayText += lines[i].text;
+                    }
+                    if (i < lines.length - 1) displayText += '<br>';
+                }
+
+                // Add current line progress
+                const currentText = currentLine.text.substring(0, charIndex);
+                if (currentLine.isGradient) {
+                    displayText += `<span class="gradient-char">${currentText}</span>`;
+                } else {
+                    displayText += currentText;
+                }
+
+                typingElement.innerHTML = displayText;
+                charIndex++;
+
+                setTimeout(type, typingSpeed);
+            } else {
+                // Finished current line
+                if (lineIndex < lines.length - 1) {
+                    // Move to next line
+                    lineIndex++;
+                    charIndex = 0;
+                    setTimeout(type, lineBreakPause);
+                } else {
+                    // Finished all lines, pause then hide cursor
+                    isPaused = true;
+                    if (cursor) cursor.classList.add('hidden');
+                    // Animation complete - don't restart
+                }
+            }
+        }
+    }
+
+    // Start typing after loading screen
+    setTimeout(() => {
+        type();
+    }, 1200);
 }

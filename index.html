@@ -33,6 +33,17 @@
 </head>
 
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-logo">Part5 Pro</div>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
     <!-- Fixed Header -->
     <header class="fixed-header" id="fixedHeader">
         <div class="container header-container">
@@ -58,8 +69,8 @@
             <div class="hero-text">
                 <p class="hero-badge">TOEIC Part 5 特化</p>
                 <h1 class="hero-title">
-                    Part 5を、<br>
-                    <span class="gradient-text">極める。</span>
+                    <span class="typing-text" id="typingText"></span>
+                    <span class="typing-cursor">|</span>
                 </h1>
                 <p class="hero-subtitle">
                     高品質な問題と丁寧な解説で、<br>
