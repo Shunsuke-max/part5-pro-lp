@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initCarousel();
     initFixedHeader();
     initFAQ();
+    initCountUp();
+    initParallax();
 });
 
 
@@ -235,4 +237,90 @@ function initFAQ() {
             question.setAttribute('aria-expanded', !isOpen);
         });
     });
+}
+
+// ========================================
+// Count Up Animation
+// ========================================
+function initCountUp() {
+    const statNumbers = document.querySelectorAll('.stat-number[data-count]');
+
+    if (statNumbers.length === 0) return;
+
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.5
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const element = entry.target;
+                const target = parseInt(element.dataset.count);
+                animateCount(element, target);
+                observer.unobserve(element);
+            }
+        });
+    }, observerOptions);
+
+    statNumbers.forEach(el => observer.observe(el));
+}
+
+function animateCount(element, target) {
+    const duration = 2000;
+    const frameDuration = 1000 / 60;
+    const totalFrames = Math.round(duration / frameDuration);
+    const easeOutQuad = t => t * (2 - t);
+
+    let frame = 0;
+    const counter = setInterval(() => {
+        frame++;
+        const progress = easeOutQuad(frame / totalFrames);
+        const currentCount = Math.round(target * progress);
+
+        element.textContent = currentCount.toLocaleString();
+
+        if (frame === totalFrames) {
+            clearInterval(counter);
+            element.textContent = target.toLocaleString();
+        }
+    }, frameDuration);
+}
+
+// ========================================
+// Parallax Effect
+// ========================================
+function initParallax() {
+    const parallaxElements = document.querySelectorAll('[data-parallax]');
+
+    if (parallaxElements.length === 0) return;
+
+    let ticking = false;
+
+    function updateParallax() {
+        const scrollY = window.scrollY;
+
+        parallaxElements.forEach(element => {
+            const rect = element.getBoundingClientRect();
+            const elementTop = rect.top + scrollY;
+            const elementHeight = rect.height;
+            const windowHeight = window.innerHeight;
+
+            // Only apply parallax when element is in view
+            if (scrollY + windowHeight > elementTop && scrollY < elementTop + elementHeight) {
+                const parallaxOffset = (scrollY - elementTop) * 0.15;
+                element.style.transform = `translateY(${parallaxOffset}px)`;
+            }
+        });
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(updateParallax);
+            ticking = true;
+        }
+    }, { passive: true });
 }
