@@ -16,6 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initTypingAnimation();
     initCustomCursor();
     initParticles();
+    initMobileMenu();
+    initDemoQuestion();
+    initStickyCTA();
 });
 
 
@@ -178,6 +181,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
+            // Close mobile menu if open
+            const mobileNav = document.getElementById('mobileNav');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            if (mobileNav && mobileNav.classList.contains('active')) {
+                mobileNav.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+            }
+
             target.scrollIntoView({
                 behavior: 'smooth',
                 block: 'start'
@@ -548,4 +559,112 @@ function createParticle(container) {
         particle.remove();
         createParticle(container);
     });
+}
+
+// ========================================
+// Mobile Menu
+// ========================================
+function initMobileMenu() {
+    const menuBtn = document.getElementById('mobileMenuBtn');
+    const mobileNav = document.getElementById('mobileNav');
+
+    if (!menuBtn || !mobileNav) return;
+
+    menuBtn.addEventListener('click', () => {
+        menuBtn.classList.toggle('active');
+        mobileNav.classList.toggle('active');
+    });
+}
+
+// ========================================
+// Interactive Demo Question
+// ========================================
+function initDemoQuestion() {
+    const optionsContainer = document.getElementById('demoOptions');
+    const resultContainer = document.getElementById('demoResult');
+    const retryBtn = document.getElementById('demoRetry');
+
+    if (!optionsContainer || !resultContainer) return;
+
+    const options = optionsContainer.querySelectorAll('.option-btn');
+
+    options.forEach(option => {
+        option.addEventListener('click', () => {
+            // Disable all options
+            options.forEach(opt => {
+                opt.disabled = true;
+                opt.classList.remove('selected');
+            });
+
+            // Mark selected option
+            option.classList.add('selected');
+
+            const isCorrect = option.dataset.correct === 'true';
+
+            // Mark correct/incorrect
+            options.forEach(opt => {
+                if (opt.dataset.correct === 'true') {
+                    opt.classList.add('correct');
+                } else if (opt === option) {
+                    opt.classList.add('incorrect');
+                }
+            });
+
+            // Show result
+            resultContainer.classList.add('show');
+            if (isCorrect) {
+                resultContainer.classList.add('correct');
+                resultContainer.classList.remove('incorrect');
+                resultContainer.querySelector('.result-title').textContent = '正解！';
+            } else {
+                resultContainer.classList.add('incorrect');
+                resultContainer.classList.remove('correct');
+                resultContainer.querySelector('.result-title').textContent = '残念...';
+            }
+        });
+    });
+
+    // Retry button
+    if (retryBtn) {
+        retryBtn.addEventListener('click', () => {
+            options.forEach(opt => {
+                opt.disabled = false;
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+            resultContainer.classList.remove('show', 'correct', 'incorrect');
+        });
+    }
+}
+
+// ========================================
+// Sticky CTA Button
+// ========================================
+function initStickyCTA() {
+    const stickyCta = document.getElementById('stickyCta');
+    const hero = document.querySelector('.hero');
+
+    if (!stickyCta || !hero) return;
+
+    const heroHeight = hero.offsetHeight;
+    let ticking = false;
+
+    function updateStickyCTA() {
+        const currentScrollY = window.scrollY;
+
+        // Show sticky CTA after scrolling past hero
+        if (currentScrollY > heroHeight * 0.8) {
+            stickyCta.classList.add('visible');
+        } else {
+            stickyCta.classList.remove('visible');
+        }
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(updateStickyCTA);
+            ticking = true;
+        }
+    }, { passive: true });
 }
